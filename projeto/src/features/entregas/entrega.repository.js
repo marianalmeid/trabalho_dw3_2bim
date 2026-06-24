@@ -1,0 +1,3 @@
+class EntregaRepository {
+  async findAll() {}
+}

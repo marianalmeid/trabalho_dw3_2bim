@@ -1,0 +1,3 @@
+class ClienteRepository {
+  async findAll() {}
+}
