@@ -1,0 +1,108 @@
+# API - Sistema de Gestão de Confeitaria
+
+API RESTful desenvolvida em **Node.js**, utilizando **Fastify**, **PostgreSQL** e documentação com **Swagger**.
+
+## Pré-requisitos
+
+Antes de executar o projeto, é necessário ter instalado:
+
+* Node.js (versão 20 ou superior)
+* npm (instalado junto com o Node.js)
+* PostgreSQL
+
+## 1. Clonar o repositório
+
+```bash
+git clone <URL_DO_REPOSITORIO>
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd projeto
+```
+
+## 2. Instalar as dependências
+
+Execute o comando abaixo para instalar todas as dependências do projeto:
+
+```bash
+npm install
+```
+
+Caso seja necessário instalar manualmente, utilize:
+
+```bash
+npm install fastify
+npm install pg
+npm install dotenv
+npm install @fastify/swagger
+npm install @fastify/swagger-ui
+```
+
+Para dependências de desenvolvimento:
+
+```bash
+npm install -D nodemon
+```
+
+## 3. Configurar o banco de dados
+
+Crie um banco de dados PostgreSQL.
+
+Na raiz do projeto, crie um arquivo chamado `.env` contendo:
+
+```env
+DATABASE_URL=postgresql://postgres.etpznabofmsoqydwxtju:LSv0vgxvKD9traxR@aws-1-us-west-2.pooler.supabase.com:6543/postgres
+PORT=6543
+```
+
+Exemplo:
+
+```env
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/confeitaria
+PORT=3333
+```
+
+## 4. Criar as tabelas
+
+Execute o script SQL disponibilizado no projeto para criar todas as tabelas do banco de dados.
+
+## 5. Executar o projeto
+
+Modo desenvolvimento:
+
+```bash
+npm run dev
+```
+
+ou
+
+Modo normal:
+
+```bash
+npm start
+```
+
+## 6. Acessar a aplicação
+
+Servidor:
+
+```
+http://localhost:3333
+```
+
+Documentação Swagger:
+
+```
+http://localhost:3333/docs
+```
+
+## Tecnologias utilizadas
+
+* Node.js
+* Fastify
+* PostgreSQL
+* pg
+* dotenv
+* Swagger (OpenAPI)
