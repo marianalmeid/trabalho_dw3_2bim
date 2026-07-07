@@ -1,10 +1,10 @@
 import Fastify from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-
 import pool from "./database/connection.js";
 import clienteRoutes from "./features/clientes/cliente.routes.js";
 import errorHandler from "./shared/errorHandler.js";
+import produtoRoutes from "./features/produtos/produto.routes.js";
 
 const fastify = Fastify();
 
@@ -34,6 +34,8 @@ await fastify.register(swaggerUi, {
 
 // Rotas
 await fastify.register(clienteRoutes);
+
+await fastify.register(produtoRoutes);
 
 // Rota de teste
 fastify.get("/teste", async () => {

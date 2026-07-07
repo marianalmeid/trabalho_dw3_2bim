@@ -1,10 +1,4 @@
-import Fastify from "fastify";
-import swagger from "@fastify/swagger";
-import swaggerUi from "@fastify/swagger-ui";
-import pool from "./database/connection.js";
 import AppError from "../../shared/AppError.js";
-import clienteRoutes from "./features/clientes/cliente.routes.js";
-import errorHandler from "./shared/errorHandler.js";
 
 class ClienteService {
   constructor(clienteRepository) {
