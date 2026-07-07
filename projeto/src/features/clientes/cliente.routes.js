@@ -71,12 +71,10 @@ async function clienteRoutes(fastify) {
         required: ["nome", "email"],
         properties: {
           nome: {
-            type: "string",
-            example: "João Silva"
+            type: "string"
           },
           email: {
-            type: "string",
-            example: "joao@email.com"
+            type: "string"
           }
         }
       },
@@ -117,12 +115,10 @@ async function clienteRoutes(fastify) {
         type: "object",
         properties: {
           nome: {
-            type: "string",
-            example: "Maria Souza"
+            type: "string"
           },
           email: {
-            type: "string",
-            example: "maria@email.com"
+            type: "string"
           }
         }
       },

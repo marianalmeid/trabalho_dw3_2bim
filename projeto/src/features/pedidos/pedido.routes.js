@@ -1,4 +1,7 @@
-import ProdutoRepository from "./produto.repository.js";
+      preco: { type: "number" },
+              estoque: { type: "integer" },
+              categoria: { type: "string" }
+         import ProdutoRepository from "./produto.repository.js";
 import ProdutoService from "./produto.service.js";
 import ProdutoController from "./produto.controller.js";
 
@@ -21,10 +24,7 @@ async function produtoRoutes(fastify) {
             properties: {
               id: { type: "integer" },
               nome: { type: "string" },
-              preco: { type: "number" },
-              estoque: { type: "integer" },
-              categoria: { type: "string" }
-            }
+           }
           }
         }
       }
