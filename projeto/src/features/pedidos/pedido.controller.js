@@ -1,48 +1,61 @@
-class ProdutoController {
-  constructor(produtoService) {
-    this.produtoService = produtoService;
+class PedidoController {
+
+  constructor(pedidoService) {
+    this.pedidoService = pedidoService;
   }
 
   async findAll(request, reply) {
-    const produtos = await this.produtoService.findAll();
 
-    return reply.status(200).send(produtos);
+    const pedidos =
+      await this.pedidoService.findAll();
+
+    return reply.send(pedidos);
+
   }
 
   async findById(request, reply) {
+
     const { id } = request.params;
 
-    const produto = await this.produtoService.findById(id);
+    const pedido =
+      await this.pedidoService.findById(id);
 
-    return reply.status(200).send(produto);
+    return reply.send(pedido);
+
   }
 
   async create(request, reply) {
-    const produto = request.body;
 
-    const novoProduto = await this.produtoService.create(produto);
+    const pedido =
+      await this.pedidoService.create(request.body);
 
-    return reply.status(201).send(novoProduto);
+    return reply.code(201).send(pedido);
+
   }
 
   async update(request, reply) {
+
     const { id } = request.params;
 
-    const produto = request.body;
+    const pedido =
+      await this.pedidoService.update(id, request.body);
 
-    const produtoAtualizado =
-      await this.produtoService.update(id, produto);
+    return reply.send(pedido);
 
-    return reply.status(200).send(produtoAtualizado);
   }
 
   async delete(request, reply) {
+
     const { id } = request.params;
 
-    await this.produtoService.delete(id);
+    await this.pedidoService.delete(id);
 
-    return reply.status(204).send();
+    return reply.send({
+      message: "Pedido removido com sucesso."
+    });
+
   }
+
 }
 
-export default ProdutoController;
+export default PedidoController;

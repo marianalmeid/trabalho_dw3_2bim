@@ -1,103 +1,56 @@
 import AppError from "../../shared/AppError.js";
 
-class ProdutoService {
+class PedidoService {
 
-    constructor(produtoRepository){
-        this.produtoRepository = produtoRepository;
+  constructor(pedidoRepository) {
+    this.pedidoRepository = pedidoRepository;
+  }
+
+  async findAll() {
+    return await this.pedidoRepository.findAll();
+  }
+
+  async findById(id) {
+
+    const pedido = await this.pedidoRepository.findById(id);
+
+    if (!pedido) {
+      throw new AppError("Pedido não encontrado.", 404);
     }
 
-    async findAll(){
-        return await this.produtoRepository.findAll();
+    return pedido;
+  }
+
+  async create(pedido) {
+    return await this.pedidoRepository.create(pedido);
+  }
+
+  async update(id, pedido) {
+
+    const pedidoExistente =
+      await this.pedidoRepository.findById(id);
+
+    if (!pedidoExistente) {
+      throw new AppError("Pedido não encontrado.", 404);
     }
 
-    async findById(id){
+    return await this.pedidoRepository.update(id, pedido);
 
-        const produto =
-            await this.produtoRepository.findById(id);
+  }
 
-        if(!produto){
-            throw new AppError(
-                "Produto não encontrado.",
-                404
-            );
-        }
+  async delete(id) {
 
-        return produto;
+    const pedidoExistente =
+      await this.pedidoRepository.findById(id);
 
+    if (!pedidoExistente) {
+      throw new AppError("Pedido não encontrado.", 404);
     }
 
-    async create(produto){
+    await this.pedidoRepository.delete(id);
 
-        const existente =
-            await this.produtoRepository.findByNome(produto.nome);
-
-        if(existente){
-
-            throw new AppError(
-                "Produto já cadastrado.",
-                409
-            );
-
-        }
-
-        if(produto.preco <= 0){
-
-            throw new AppError(
-                "Preço inválido.",
-                400
-            );
-
-        }
-
-        if(produto.estoque < 0){
-
-            throw new AppError(
-                "Estoque inválido.",
-                400
-            );
-
-        }
-
-        return await this.produtoRepository.create(produto);
-
-    }
-
-    async update(id,produto){
-
-        const existente =
-            await this.produtoRepository.findById(id);
-
-        if(!existente){
-
-            throw new AppError(
-                "Produto não encontrado.",
-                404
-            );
-
-        }
-
-        return await this.produtoRepository.update(id,produto);
-
-    }
-
-    async delete(id){
-
-        const existente =
-            await this.produtoRepository.findById(id);
-
-        if(!existente){
-
-            throw new AppError(
-                "Produto não encontrado.",
-                404
-            );
-
-        }
-
-        await this.produtoRepository.delete(id);
-
-    }
+  }
 
 }
 
-export default ProdutoService;
+export default PedidoService;

@@ -19,16 +19,20 @@ class ClienteService {
     return cliente;
   }
 
-  async create(cliente) {
-    const clienteExistente =
-      await this.clienteRepository.findByEmail(cliente.email);
+  async create(cliente){
 
-    if (clienteExistente) {
-      throw new AppError("E-mail já cadastrado.", 409);
+    const clienteExistente =
+        await this.clienteRepository.findByEmail(cliente.email);
+
+    if(clienteExistente){
+        throw new AppError(
+            "Já existe um cliente com esse email.",
+            400
+        );
     }
 
-    return await this.clienteRepository.create(cliente);
-  }
+    return this.clienteRepository.create(cliente);
+}
 
   async update(id, cliente) {
     const clienteExistente =

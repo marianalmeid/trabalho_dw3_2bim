@@ -19,15 +19,19 @@ class ProdutoService {
     return produto;
   }
 
-  async create(produto) {
-    const produtoExistente = await this.produtoRepository.findBySku(produto.sku);
+  async create(produto){
 
-    if (produtoExistente) {
-      throw new AppError("Já existe um produto cadastrado com este SKU.", 409);
+    const produtoExistente = await this.produtoRepository.findByNome(produto.nome);
+
+    if(produtoExistente){
+        throw new AppError(
+            "Produto já cadastrado.",
+            400
+        );
     }
 
-    return await this.produtoRepository.create(produto);
-  }
+    return this.produtoRepository.create(produto);
+}
 
   async update(id, produto) {
     const produtoExistente = await this.produtoRepository.findById(id);

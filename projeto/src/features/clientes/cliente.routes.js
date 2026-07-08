@@ -21,7 +21,8 @@ async function clienteRoutes(fastify) {
             properties: {
               id: { type: "integer" },
               nome: { type: "string" },
-              email: { type: "string" }
+              email: { type: "string" },
+              telefone: {type: "integer"}
             }
           }
         }

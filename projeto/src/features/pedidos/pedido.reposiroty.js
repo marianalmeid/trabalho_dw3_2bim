@@ -1,98 +1,101 @@
 import pool from "../../database/connection.js";
 
-class ProdutoRepository {
+class PedidoRepository {
 
-    async findAll() {
-        const result = await pool.query(
-            "SELECT * FROM produtos ORDER BY id"
-        );
+  async findAll() {
+    const result = await pool.query(
+      "SELECT * FROM pedidos ORDER BY id"
+    );
 
-        return result.rows;
-    }
+    return result.rows;
+  }
 
-    async findById(id) {
+  async findById(id) {
+    const result = await pool.query(
 
-        const result = await pool.query(
-            "SELECT * FROM produtos WHERE id=$1",
-            [id]
-        );
+        `SELECT
 
-        return result.rows[0];
-    }
+            pedidos.id,
+            pedidos.data_pedido,
+            pedidos.status,
+            pedidos.valor_total,
 
-    async findByNome(nome) {
+            clientes.nome AS cliente
 
-        const result = await pool.query(
-            "SELECT * FROM produtos WHERE nome=$1",
-            [nome]
-        );
+        FROM pedidos
 
-        return result.rows[0];
-    }
+        INNER JOIN clientes
 
-    async create(produto) {
+        ON clientes.id = pedidos.cliente_id
 
-        const {
-            nome,
-            preco,
-            estoque,
-            categoria
-        } = produto;
+        WHERE pedidos.id=$1`,
 
-        const result = await pool.query(
-            `INSERT INTO produtos
-            (nome,preco,estoque,categoria)
-            VALUES ($1,$2,$3,$4)
-            RETURNING *`,
-            [
-                nome,
-                preco,
-                estoque,
-                categoria
-            ]
-        );
+        [id]
 
-        return result.rows[0];
-    }
+    );
 
-    async update(id, produto) {
+    return result.rows[0];
+  }
 
-        const {
-            nome,
-            preco,
-            estoque,
-            categoria
-        } = produto;
+  async create(pedido) {
+    const {
+      data_pedido,
+      status,
+      cliente_id,
+      valor_total
+    } = pedido;
 
-        const result = await pool.query(
-            `UPDATE produtos
-             SET nome=$1,
-                 preco=$2,
-                 estoque=$3,
-                 categoria=$4
-             WHERE id=$5
-             RETURNING *`,
-            [
-                nome,
-                preco,
-                estoque,
-                categoria,
-                id
-            ]
-        );
+    const result = await pool.query(
+      `INSERT INTO pedidos
+      (data_pedido, status, cliente_id, valor_total)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *`,
+      [
+        data_pedido,
+        status,
+        cliente_id,
+        valor_total
+      ]
+    );
 
-        return result.rows[0];
-    }
+    return result.rows[0];
+  }
 
-    async delete(id){
+  async update(id, pedido) {
+    const {
+      data_pedido,
+      status,
+      cliente_id,
+      valor_total
+    } = pedido;
 
-        await pool.query(
-            "DELETE FROM produtos WHERE id=$1",
-            [id]
-        );
+    const result = await pool.query(
+      `UPDATE pedidos
+      SET data_pedido = $1,
+          status = $2,
+          cliente_id = $3,
+          valor_total = $4
+      WHERE id = $5
+      RETURNING *`,
+      [
+        data_pedido,
+        status,
+        cliente_id,
+        valor_total,
+        id
+      ]
+    );
 
-    }
+    return result.rows[0];
+  }
+
+  async delete(id) {
+    await pool.query(
+      "DELETE FROM pedidos WHERE id = $1",
+      [id]
+    );
+  }
 
 }
 
-export default ProdutoRepository;
+export default PedidoRepository;

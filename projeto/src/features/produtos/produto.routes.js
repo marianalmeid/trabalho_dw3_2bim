@@ -2,19 +2,185 @@ import ProdutoRepository from "./produto.repository.js";
 import ProdutoService from "./produto.service.js";
 import ProdutoController from "./produto.controller.js";
 
-// No Fastify, as rotas são exportadas como funções assíncronas (plugins)
-async function produtoRoutes(fastify, options) {
-  // Instanciação e Injeção de Dependências
-  const produtoRepository = new ProdutoRepository();
-  const produtoService = new ProdutoService(produtoRepository);
-  const produtoController = new ProdutoController(produtoService);
+const repository = new ProdutoRepository();
+const service = new ProdutoService(repository);
+const controller = new ProdutoController(service);
 
-  // Definição das Rotas do Fastify
-  fastify.get("/", produtoController.index);
-  fastify.get("/:id", produtoController.show);
-  fastify.post("/", produtoController.store);
-  fastify.put("/:id", produtoController.update);
-  fastify.delete("/:id", produtoController.delete);
+async function produtoRoutes(fastify) {
+
+  fastify.get("/produtos", {
+    schema: {
+      tags: ["Produtos"],
+      summary: "Lista todos os produtos",
+      response: {
+        200: {
+          description: "Lista de produtos",
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              nome: { type: "string" },
+              preco: { type: "number" },
+              estoque: { type: "integer" }
+            }
+          }
+        }
+      }
+    }
+  }, controller.findAll.bind(controller));
+
+  fastify.get("/produtos/:id", {
+    schema: {
+      tags: ["Produtos"],
+      summary: "Busca um produto pelo ID",
+      params: {
+        type: "object",
+        properties: {
+          id: { type: "integer" }
+        },
+        required: ["id"]
+      },
+      response: {
+        200: {
+          description: "Produto encontrado",
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            nome: { type: "string" },
+            preco: { type: "number" },
+            estoque: { type: "integer" }
+          }
+        },
+        404: {
+          description: "Produto não encontrado",
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            message: { type: "string" }
+          }
+        }
+      }
+    }
+  }, controller.findById.bind(controller));
+
+  fastify.post("/produtos", {
+    schema: {
+      tags: ["Produtos"],
+      summary: "Cadastra um novo produto",
+      body: {
+        type: "object",
+        required: ["nome", "preco", "estoque"],
+        properties: {
+          nome: {
+            type: "string"
+          },
+          preco: {
+            type: "number"
+          },
+          estoque: {
+            type: "integer"
+          }
+        }
+      },
+      response: {
+        201: {
+          description: "Produto criado",
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            nome: { type: "string" },
+            preco: { type: "number" },
+            estoque: { type: "integer" }
+          }
+        },
+        400: {
+          description: "Erro de validação",
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            message: { type: "string" }
+          }
+        }
+      }
+    }
+  }, controller.create.bind(controller));
+
+  fastify.patch("/produtos/:id", {
+    schema: {
+      tags: ["Produtos"],
+      summary: "Atualiza um produto",
+      params: {
+        type: "object",
+        properties: {
+          id: { type: "integer" }
+        },
+        required: ["id"]
+      },
+      body: {
+        type: "object",
+        properties: {
+          nome: {
+            type: "string"
+          },
+          preco: {
+            type: "number"
+          },
+          estoque: {
+            type: "integer"
+          }
+        }
+      },
+      response: {
+        200: {
+          description: "Produto atualizado",
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
+        },
+        404: {
+          description: "Produto não encontrado",
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            message: { type: "string" }
+          }
+        }
+      }
+    }
+  }, controller.update.bind(controller));
+
+  fastify.delete("/produtos/:id", {
+    schema: {
+      tags: ["Produtos"],
+      summary: "Remove um produto",
+      params: {
+        type: "object",
+        properties: {
+          id: { type: "integer" }
+        },
+        required: ["id"]
+      },
+      response: {
+        200: {
+          description: "Produto removido",
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
+        },
+        404: {
+          description: "Produto não encontrado",
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            message: { type: "string" }
+          }
+        }
+      }
+    }
+  }, controller.delete.bind(controller));
 }
 
 export default produtoRoutes;

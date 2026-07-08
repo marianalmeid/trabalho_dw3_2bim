@@ -15,35 +15,44 @@ class EntregaRepository {
   }
 
   async create(entrega) {
-    const { pedido_id, endereco, status, data_entrega } = entrega;
+  const { pedido_id, endereco, status } = entrega;
 
-    const result = await pool.query(
-      `INSERT INTO entregas 
-      (pedido_id, endereco, status, data_entrega) 
-      VALUES ($1, $2, $3, $4) 
-      RETURNING *`,
-      [pedido_id, endereco, status || 'Pendente', data_entrega]
-    );
+  const result = await pool.query(
+    `INSERT INTO entregas
+    (pedido_id,endereco,status)
+    VALUES ($1,$2,$3)
+    RETURNING *`,
+    [
+      pedido_id,
+      endereco,
+      status || "Pendente"
+    ]
+  );
 
-    return result.rows[0];
-  }
+  return result.rows[0];
+}
 
   async update(id, entrega) {
-    const { pedido_id, endereco, status, data_entrega } = entrega;
 
-    const result = await pool.query(
-      `UPDATE entregas 
-      SET pedido_id = $1, 
-          endereco = $2, 
-          status = $3, 
-          data_entrega = $4 
-      WHERE id = $5 
-      RETURNING *`,
-      [pedido_id, endereco, status, data_entrega, id]
-    );
+  const { pedido_id, endereco, status } = entrega;
 
-    return result.rows[0];
-  }
+  const result = await pool.query(
+    `UPDATE entregas
+     SET pedido_id=$1,
+         endereco=$2,
+         status=$3
+     WHERE id=$4
+     RETURNING *`,
+    [
+      pedido_id,
+      endereco,
+      status,
+      id
+    ]
+  );
+
+  return result.rows[0];
+}
 
   async delete(id) {
     await pool.query("DELETE FROM entregas WHERE id = $1", [id]);

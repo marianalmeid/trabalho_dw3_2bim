@@ -1,40 +1,40 @@
-      preco: { type: "number" },
-              estoque: { type: "integer" },
-              categoria: { type: "string" }
-         import ProdutoRepository from "./produto.repository.js";
-import ProdutoService from "./produto.service.js";
-import ProdutoController from "./produto.controller.js";
+import PedidoRepository from "./pedido.reposiroty.js";
+import PedidoService from "./pedido.service.js";
+import PedidoController from "./pedido.controller.js";
 
-const repository = new ProdutoRepository();
-const service = new ProdutoService(repository);
-const controller = new ProdutoController(service);
+const repository = new PedidoRepository();
+const service = new PedidoService(repository);
+const controller = new PedidoController(service);
 
-async function produtoRoutes(fastify) {
+async function pedidoRoutes(fastify) {
 
-  fastify.get("/produtos", {
+  fastify.get("/pedidos", {
     schema: {
-      tags: ["Produtos"],
-      summary: "Lista todos os produtos",
+      tags: ["Pedidos"],
+      summary: "Lista todos os pedidos",
       response: {
         200: {
-          description: "Lista de produtos",
+          description: "Lista de pedidos",
           type: "array",
           items: {
             type: "object",
             properties: {
               id: { type: "integer" },
-              nome: { type: "string" },
-           }
+              cliente_id: { type: "integer" },
+              data_pedido: { type: "string", format: "date-time" },
+              valor_total: { type: "number" },
+              status: { type: "string" }
+            }
           }
         }
       }
     }
   }, controller.findAll.bind(controller));
 
-  fastify.get("/produtos/:id", {
+  fastify.get("/pedidos/:id", {
     schema: {
-      tags: ["Produtos"],
-      summary: "Busca um produto pelo ID",
+      tags: ["Pedidos"],
+      summary: "Busca um pedido pelo ID",
       params: {
         type: "object",
         properties: {
@@ -44,18 +44,18 @@ async function produtoRoutes(fastify) {
       },
       response: {
         200: {
-          description: "Produto encontrado",
+          description: "Pedido encontrado",
           type: "object",
           properties: {
             id: { type: "integer" },
-            nome: { type: "string" },
-            preco: { type: "number" },
-            estoque: { type: "integer" },
-            categoria: { type: "string" }
+            cliente: { type: "string" },
+            data_pedido: { type: "string", format: "date-time" },
+            valor_total: { type: "number" },
+            status: { type: "string" }
           }
         },
         404: {
-          description: "Produto não encontrado",
+          description: "Pedido não encontrado",
           type: "object",
           properties: {
             statusCode: { type: "integer" },
@@ -66,42 +66,39 @@ async function produtoRoutes(fastify) {
     }
   }, controller.findById.bind(controller));
 
-  fastify.post("/produtos", {
+  fastify.post("/pedidos", {
     schema: {
-      tags: ["Produtos"],
-      summary: "Cadastra um novo produto",
+      tags: ["Pedidos"],
+      summary: "Cadastra um novo pedido",
       body: {
         type: "object",
-        required: ["nome", "preco", "estoque", "categoria"],
+        required: ["cliente_id", "data_pedido", "valor_total", "status"],
         properties: {
-          nome: {
+          cliente_id: {
+            type: "integer"
+          },
+          data_pedido: {
             type: "string",
-            example: "Bolo de Chocolate"
+            format: "date-time"
           },
-          preco: {
-            type: "number",
-            example: 39.90
+          valor_total: {
+            type: "number"
           },
-          estoque: {
-            type: "integer",
-            example: 20
-          },
-          categoria: {
-            type: "string",
-            example: "Bolos"
+          status: {
+            type: "string"
           }
         }
       },
       response: {
         201: {
-          description: "Produto criado",
+          description: "Pedido criado",
           type: "object",
           properties: {
             id: { type: "integer" },
-            nome: { type: "string" },
-            preco: { type: "number" },
-            estoque: { type: "integer" },
-            categoria: { type: "string" }
+            cliente_id: { type: "integer" },
+            data_pedido: { type: "string", format: "date-time" },
+            valor_total: { type: "number" },
+            status: { type: "string" }
           }
         },
         400: {
@@ -116,10 +113,10 @@ async function produtoRoutes(fastify) {
     }
   }, controller.create.bind(controller));
 
-  fastify.patch("/produtos/:id", {
+  fastify.patch("/pedidos/:id", {
     schema: {
-      tags: ["Produtos"],
-      summary: "Atualiza um produto",
+      tags: ["Pedidos"],
+      summary: "Atualiza um pedido",
       params: {
         type: "object",
         properties: {
@@ -130,38 +127,35 @@ async function produtoRoutes(fastify) {
       body: {
         type: "object",
         properties: {
-          nome: {
+          cliente_id: {
+            type: "integer"
+          },
+          data_pedido: {
             type: "string",
-            example: "Bolo Red Velvet"
+            format: "date-time"
           },
-          preco: {
-            type: "number",
-            example: 49.90
+          valor_total: {
+            type: "number"
           },
-          estoque: {
-            type: "integer",
-            example: 15
-          },
-          categoria: {
-            type: "string",
-            example: "Bolos"
+          status: {
+            type: "string"
           }
         }
       },
       response: {
         200: {
-          description: "Produto atualizado",
+          description: "Pedido atualizado",
           type: "object",
           properties: {
             id: { type: "integer" },
-            nome: { type: "string" },
-            preco: { type: "number" },
-            estoque: { type: "integer" },
-            categoria: { type: "string" }
+            cliente_id: { type: "integer" },
+            data_pedido: { type: "string", format: "date-time" },
+            valor_total: { type: "number" },
+            status: { type: "string" }
           }
         },
         404: {
-          description: "Produto não encontrado",
+          description: "Pedido não encontrado",
           type: "object",
           properties: {
             statusCode: { type: "integer" },
@@ -172,10 +166,10 @@ async function produtoRoutes(fastify) {
     }
   }, controller.update.bind(controller));
 
-  fastify.delete("/produtos/:id", {
+  fastify.delete("/pedidos/:id", {
     schema: {
-      tags: ["Produtos"],
-      summary: "Remove um produto",
+      tags: ["Pedidos"],
+      summary: "Remove um pedido",
       params: {
         type: "object",
         properties: {
@@ -184,11 +178,15 @@ async function produtoRoutes(fastify) {
         required: ["id"]
       },
       response: {
-        204: {
-          description: "Produto removido"
+        200: {
+          description: "Pedido removido",
+          type: "object",
+          properties: {
+            message: { type: "string" }
+          }
         },
         404: {
-          description: "Produto não encontrado",
+          description: "Pedido não encontrado",
           type: "object",
           properties: {
             statusCode: { type: "integer" },
@@ -198,6 +196,7 @@ async function produtoRoutes(fastify) {
       }
     }
   }, controller.delete.bind(controller));
+
 }
 
-export default produtoRoutes;
+export default pedidoRoutes;
